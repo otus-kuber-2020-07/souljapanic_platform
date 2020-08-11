@@ -14,7 +14,7 @@ spec:
           mountPath: /app
   containers:
     - name: web
-      image: docker.io/souljapanic/kubernetes-intro-web
+      image: souljapanic/kubernetes-intro-web:latest
       volumeMounts:
         - name: app
           mountPath: /app
