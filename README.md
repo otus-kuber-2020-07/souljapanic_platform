@@ -67,7 +67,7 @@ kubectl get daemonset.apps/kube-proxy -o yaml -n kube-system
 
 ```
 Все остальные POD'ы используют Static Pods.
-Конфигурация хранится на виртуальной машине minikube в диреткории /etc/kubernetes/manifests/
+Конфигурация хранится на виртуальной машине minikube в директории /etc/kubernetes/manifests/
 ```
 
 ## Создание POD'а web:
