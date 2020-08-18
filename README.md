@@ -129,3 +129,192 @@ kubectl logs frontend -n default
 ```
 kubectl set env pod/frontend --list
 ```
+
+# kubernetes-controllers
+
+## Настройка окружения:
+
+* Создание кластера:
+
+```
+kind create cluster --config kind-config.yaml
+```
+
+* Список кластеров:
+
+```
+kind get clusters
+```
+
+* Информация о кластере:
+
+```
+kubectl cluster-info --context kind-kind
+```
+
+## ReplicaSet
+
+* Проверка работы ReplicaSet, matchLabels выполняется по app=frontend:
+
+```
+kubectl apply -f frontend-replicaset.yaml -n default
+```
+
+* Увеличение количества replica:
+
+```
+kubectl scale replicaset frontend --replicas=3
+```
+
+* Проверка образа указанного в ReplicaSet:
+
+```
+kubectl get replicaset frontend -o=jsonpath='{.spec.template.spec.containers[0].image}' -n default
+```
+
+* Проверка образа из которого запущен контейнер:
+
+```
+kubectl get pods -l app=frontend -o=jsonpath='{.items[0].spec.containers[0].image}' -n default
+```
+
+### Описание:
+
+```
+ReplicaSet сделит за тем, сколько POD'ов должно быть запущено, значение указано в .spec.replicas
+```
+
+## Deployment
+
+* Проверка работы Deployment:
+
+```
+kubectl apply -f paymentservice-deployment.yam -n default
+```
+
+* История Deployment:
+
+```
+kubectl rollout history deployment paymentservice -n default
+```
+
+* Просмотр всех элементов namespace:
+
+```
+kubectl get all -o name -n default
+
+pod/paymentservice-7c8468cf9-hcwts
+pod/paymentservice-7c8468cf9-kkf6k
+pod/paymentservice-7c8468cf9-xvqbx
+service/kubernetes
+deployment.apps/paymentservice
+replicaset.apps/paymentservice-68c65b7974
+replicaset.apps/paymentservice-7c8468cf9
+```
+
+* Возврат к предыдущей версии:
+
+```
+kubectl rollout undo deployment paymentservice --to-revision=1 -n default
+```
+
+* Проверка работы сценария развёртывания blue-green:
+
+```
+kubectl apply -f paymentservice-deployment-bg.yaml -n default
+```
+
+* Проверка работы сценария развёртывания Reverse Rolling Update:
+
+```
+kubectl apply -f paymentservice-deployment-reverse.yaml -n default
+```
+
+## Probes
+
+* Проверка работы readinessProbe:
+
+```
+kubectl apply -f frontend-deployment.yaml -n default
+```
+
+* Просмотр состояние POD'ов:
+
+```
+kubectl describe pod -n default
+```
+
+* Проверка статуса обновления:
+
+```
+kubectl rollout status deployment/frontend --timeout=60s -n default
+```
+
+* Отмена развёртывания с некорректным readinessProbe:
+
+```
+kubectl rollout undo deployment/frontend -n default
+```
+
+## DaemonSet
+
+* Создание namespace:
+
+```
+kubectl create namespace monitor
+```
+
+* Развёртывание node-exporter:
+
+```
+kubectl apply -f node-exporter-daemonset.yaml -n monitor
+```
+
+* Проверка node-exporter:
+
+```
+kubectl port-forward node-exporter-7s2bg 9100:9100 -n monitor
+
+curl -v localhost:9100/metrics
+```
+
+### Развёртывание node-exporter на всех узлах:
+
+* Создание SA и проверка:
+
+```
+kubectl apply -f node-exporter-serviceAccount.yaml
+
+kubectl get serviceaccounts -n monitor
+```
+
+* Создание cluster role и проверка:
+
+```
+kubectl apply -f node-exporter-clusterRole.yaml
+
+kubectl get clusterroles.rbac.authorization.k8s.io
+```
+
+* Roles Bindings и проверка:
+
+```
+kubectl apply -f node-exporter-clusterRoleBinding.yaml
+
+kubectl get clusterrolebindings.rbac.authorization.k8s.io
+```
+
+* Развёртывание node-exporter:
+
+```
+kubectl apply -f node-exporter-daemonset.yaml
+```
+
+* Создание сервиса и проверка:
+
+```
+kubectl apply -f node-exporter-service.yaml
+
+kubectl get services -n monitor
+```
+
