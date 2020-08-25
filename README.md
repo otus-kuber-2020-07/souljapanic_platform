@@ -318,3 +318,85 @@ kubectl apply -f node-exporter-service.yaml
 kubectl get services -n monitor
 ```
 
+# kubernetes-security
+
+## task01
+
+* Создать Service Account bob, дать ему роль admin в рамках всего кластера
+
+```
+kubectl apply -f 01-sa.yaml
+kubectl get sa -n default
+kubectl apply -f 02-rolebinding-sa.yaml
+kubectl get clusterrolebindings.rbac.authorization.k8s.io -l crb=bob
+```
+
+* Создать Service Account dave без доступа к кластеру
+
+```
+kubectl apply -f 03.sa.yaml
+kubectl get sa -n default
+```
+
+## task02
+
+* Создать Namespace prometheus
+
+```
+kubectl apply -f 01-ns.yaml
+kubectl get namespaces -l app=prometheus
+```
+
+* Создать Service Account carol в этом Namespace
+
+```
+kubectl apply -f 02-sa.yaml
+kubectl get sa -n prometheus
+```
+
+* Дать всем Service Account в Namespace prometheus возможность делать get, list, watch в отношении Pods всего кластера
+
+```
+kubectl apply -f 03-clusterrole.yaml
+kubectl get clusterroles.rbac.authorization.k8s.io -l cr=prometheus
+kubectl apply -f 04-clusterrb.yaml
+kubectl get clusterrolebindings.rbac.authorization.k8s.io -l crb=prometheus
+```
+
+## task03
+
+* Создать Namespace dev
+
+```
+kubectl apply -f 01-ns.yaml
+kubectl get namespaces -l app=dev
+```
+
+* Создать Service Account jane в Namespace dev
+
+```
+kubectl apply -f 02-sa.yaml
+kubectl get sa -n dev
+```
+
+* Дать jane роль admin в рамках Namespace dev
+
+```
+kubectl apply -f 03-rb.yaml
+kubectl get rolebindings.rbac.authorization.k8s.io -l rb=jane -n dev
+```
+
+* Создать Service Account ken в Namespace dev
+
+```
+kubectl apply -f 04-sa.yaml
+kubectl get sa -n dev
+```
+
+* Дать ken роль view в рамках Namespace dev
+
+```
+kubectl apply -f 05-rb.yaml
+kubectl get rolebindings.rbac.authorization.k8s.io -l rb=ken -n dev
+```
+
