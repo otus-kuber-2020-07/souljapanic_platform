@@ -1,0 +1,40 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: canary
+  namespace: canary
+  labels:
+    name: canary
+    app: canary
+spec:
+  selector:
+    app: web-canary
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: canary-test
+  namespace: canary
+  labels:
+    name: canary-test
+    app: canary-test
+spec:
+  selector:
+    app: web-canary-test
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+
