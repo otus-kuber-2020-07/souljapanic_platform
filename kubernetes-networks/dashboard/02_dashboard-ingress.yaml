@@ -14,4 +14,3 @@ spec:
         backend:
           serviceName: dashboard-svc
           servicePort: 8443
-

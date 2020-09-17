@@ -33,7 +33,7 @@ spec:
               mountPath: /app
       containers:
         - name: web
-          image: souljapanic/kubernetes-intro-web:latest
+          image: souljapanic/kib
           readinessProbe:
             httpGet:
               path: /index.html
@@ -83,7 +83,7 @@ spec:
               mountPath: /app
       containers:
         - name: web
-          image: souljapanic/kubernetes-intro-web:latest
+          image: souljapanic/kib
           readinessProbe:
             httpGet:
               path: /index.html
@@ -97,4 +97,3 @@ spec:
       volumes:
         - name: app
           emptyDir: {}
-

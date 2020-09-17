@@ -42,4 +42,3 @@ spec:
         backend:
           serviceName: canary-test
           servicePort: 8000
-

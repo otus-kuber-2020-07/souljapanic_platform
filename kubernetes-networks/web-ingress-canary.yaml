@@ -15,4 +15,3 @@ spec:
         backend:
           serviceName: web-svc
           servicePort: 8000
-
