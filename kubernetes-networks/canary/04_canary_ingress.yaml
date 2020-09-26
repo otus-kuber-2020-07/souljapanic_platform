@@ -1,0 +1,44 @@
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: canary
+  namespace: canary
+  labels:
+    name: canary
+    app: canary
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-by-header: "X-CANARY-APP"
+    nginx.ingress.kubernetes.io/canary-by-header-value: "TRUE"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /cantrap
+        backend:
+          serviceName: canary
+          servicePort: 8000
+
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: canary-test
+  namespace: canary
+  labels:
+    name: canary-test
+    app: canary-test
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /cantrap
+        backend:
+          serviceName: canary-test
+          servicePort: 8000

@@ -400,3 +400,36 @@ kubectl apply -f 05-rb.yaml
 kubectl get rolebindings.rbac.authorization.k8s.io -l rb=ken -n dev
 ```
 
+# kubernetes-networks
+
+* Разобрали принцип работы readinessProbe и livenessProbe
+* Научились отлаживать POD'ы при проблемах запуска связанных с readinessProbe и livenessProbe
+* Разобрали maxUnavailable и maxSurge в RollingUpdate
+* Научились работать с ClusterIP
+* Разобрали основы работы IPVS
+* Разобрали и установили MetalLB
+* DNS через MetalLB
+
+```
+kubectl apply -f coredns/01_dns-svc-lb-tcp.yaml
+kubectl apply -f coredns/02_dns-svc-lb-udp.yaml
+```
+
+* Разобрали принцип работы Ingress и установили ingress-nginx
+* Разобрали Headless сервис
+* Ingress для Dashboard
+
+```
+kubectl apply -f dashboard/01_dashboard-svc-headless.yaml
+kubectl apply -f dashboard/02_dashboard-ingress.yaml
+```
+
+* Canary для Ingress
+
+```
+kubectl apply -f canary/01_canary_ns.yaml
+kubectl apply -f canary/02_canary_dc.yaml
+kubectl apply -f canary/03_canary_headless.yaml
+kubectl apply -f canary/04_canary_ingress.yaml
+```
+
